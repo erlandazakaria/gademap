@@ -1,17 +1,15 @@
 import { Shape, Color } from 'three';
-var progressAndText = function (progress, text, progressValue, textValue) {
-    if (progress === void 0) { progress = null; }
-    if (text === void 0) { text = null; }
+const progressAndText = (progress = null, text = null, progressValue, textValue) => {
     progress && progress(progressValue);
     text && text(textValue);
 };
-var addToRaycaster = function (objects) {
+const addToRaycaster = (objects) => {
     if (!objects)
         return [];
-    var objArr = [];
-    objects.traverse(function (c) {
+    let objArr = [];
+    objects.traverse((c) => {
         if (c.type === 'Group') {
-            c.traverse(function (cc) { return objArr.push(cc); });
+            c.traverse((cc) => objArr.push(cc));
         }
         else if (c && c.material && c.material.visible && c.userData && (c.userData.type === 'shape' || c.userData.type === 'building')) {
             objArr.push(c);
@@ -19,34 +17,34 @@ var addToRaycaster = function (objects) {
     });
     return objArr;
 };
-var generateDefaultCalibration = function (grounds) {
-    var x = 0;
-    var y = 10;
-    var z = 20;
+const generateDefaultCalibration = (grounds) => {
+    let x = 0;
+    let y = 10;
+    let z = 20;
     if (grounds.length > 0) {
-        var groundLocation = findGroundLocation(grounds);
-        var zBasedOnWidth = -(groundLocation.mostFront - ((groundLocation.mostBack - groundLocation.mostFront) / 2));
-        var zBasedOnLength = -(groundLocation.mostLeft - ((groundLocation.mostRight - groundLocation.mostLeft) / 2));
+        const groundLocation = findGroundLocation(grounds);
+        let zBasedOnWidth = -(groundLocation.mostFront - ((groundLocation.mostBack - groundLocation.mostFront) / 2));
+        let zBasedOnLength = -(groundLocation.mostLeft - ((groundLocation.mostRight - groundLocation.mostLeft) / 2));
         x = (groundLocation.mostRight + groundLocation.mostLeft) / 2;
         y = groundLocation.highest / 2;
         z = zBasedOnWidth > zBasedOnLength ? zBasedOnWidth * 2 : zBasedOnLength;
     }
     return {
         view: 'multifloor',
-        position: { x: x, y: y, z: z },
+        position: { x, y, z },
         target: { x: 0, y: 0, z: 0 }
     };
 };
-var generateLevelCalibration = function (level) {
-    var highest = 0;
-    level.children && level.children.length > 0 && level.children.forEach(function (c) {
+const generateLevelCalibration = (level) => {
+    let highest = 0;
+    level.children && level.children.length > 0 && level.children.forEach(c => {
         if (c.userData && c.userData.height && c.userData.height > highest) {
             highest = c.userData.height;
         }
     });
-    var groundLoc = findGroundLocation([level.userData]);
-    var zBasedOnWidth = level.userData.type === 'building' ? level.userData.height : -(groundLoc.mostFront - ((groundLoc.mostBack - groundLoc.mostFront) / 2));
-    var zBasedOnLength = level.userData.type === 'building' ? level.userData.height : -(groundLoc.mostLeft - ((groundLoc.mostRight - groundLoc.mostLeft) / 2));
+    let groundLoc = findGroundLocation([level.userData]);
+    let zBasedOnWidth = level.userData.type === 'building' ? level.userData.height : -(groundLoc.mostFront - ((groundLoc.mostBack - groundLoc.mostFront) / 2));
+    let zBasedOnLength = level.userData.type === 'building' ? level.userData.height : -(groundLoc.mostLeft - ((groundLoc.mostRight - groundLoc.mostLeft) / 2));
     return {
         position: {
             x: level && level.geometry && level.geometry.boundingSphere ? level.geometry.boundingSphere.center.x : 0,
@@ -60,21 +58,21 @@ var generateLevelCalibration = function (level) {
         }
     };
 };
-var findGroundLocation = function (grounds) {
-    var highest = 0;
-    var mostLeft = 0;
-    var mostRight = 0;
-    var mostBack = 0;
-    var mostFront = 0;
+const findGroundLocation = (grounds) => {
+    let highest = 0;
+    let mostLeft = 0;
+    let mostRight = 0;
+    let mostBack = 0;
+    let mostFront = 0;
     if (grounds.length > 0) {
-        grounds.forEach(function (g, gi) {
+        grounds.forEach((g, gi) => {
             if (gi === 0) {
                 highest = g.position.y;
             }
             if (g.position.y > highest) {
                 highest = g.position.y;
             }
-            g.shape_points.forEach(function (sp, spi) {
+            g.shape_points.forEach((sp, spi) => {
                 if (spi === 0 && gi === 0) {
                     mostLeft = sp.x;
                     mostRight = sp.x;
@@ -97,17 +95,13 @@ var findGroundLocation = function (grounds) {
         });
     }
     return {
-        highest: highest,
-        mostLeft: mostLeft,
-        mostRight: mostRight,
-        mostBack: mostBack,
-        mostFront: mostFront
+        highest, mostLeft, mostRight, mostBack, mostFront
     };
 };
-var generateZShape = function (shape_points) {
-    var lessZ = 0;
-    var mostZ = 0;
-    shape_points.forEach(function (sp) {
+const generateZShape = (shape_points) => {
+    let lessZ = 0;
+    let mostZ = 0;
+    shape_points.forEach((sp) => {
         if (sp.y > mostZ) {
             mostZ = sp.y;
         }
@@ -116,13 +110,13 @@ var generateZShape = function (shape_points) {
         }
     });
     return {
-        lessZ: lessZ,
-        mostZ: mostZ
+        lessZ,
+        mostZ
     };
 };
-var generateCurves = function (curves) {
-    var shape = new Shape();
-    curves.forEach(function (c) {
+const generateCurves = (curves) => {
+    let shape = new Shape();
+    curves.forEach(c => {
         if (c.type === 'moveTo') {
             shape.moveTo(c.endPoint.x, c.endPoint.y);
         }
@@ -138,10 +132,10 @@ var generateCurves = function (curves) {
     });
     return shape;
 };
-var newColor = function (arg) {
+const newColor = (arg) => {
     return new Color(arg).convertSRGBToLinear();
 };
-var pluralIt = function (text) {
+const pluralIt = (text) => {
     if (text === "ground")
         return "grounds";
     if (text === "building")
@@ -158,7 +152,7 @@ var pluralIt = function (text) {
         return "labels";
     return text;
 };
-var singularIt = function (text) {
+const singularIt = (text) => {
     if (text === "grounds")
         return "ground";
     if (text === "buildings")
@@ -175,15 +169,15 @@ var singularIt = function (text) {
         return "label";
     return text;
 };
-var calculateLength = function (pos1, pos2) {
-    var length = pos1.x === pos2.x ? pos1.z - pos2.z : pos1.x - pos2.x;
+const calculateLength = (pos1, pos2) => {
+    let length = pos1.x === pos2.x ? pos1.z - pos2.z : pos1.x - pos2.x;
     return length < 0 ? length * -1 : length;
 };
-var getMaxDistace = function (pos1, pos2) {
+const getMaxDistace = (pos1, pos2) => {
     // Get Difference
-    var x = pos1.x - pos2.x;
-    var y = pos1.y - pos2.y;
-    var z = pos1.z - pos2.z;
+    let x = pos1.x - pos2.x;
+    let y = pos1.y - pos2.y;
+    let z = pos1.z - pos2.z;
     // Turn into Positive
     x = x < 0 ? x * -1 : x;
     y = y < 0 ? y * -1 : y;
@@ -193,7 +187,7 @@ var getMaxDistace = function (pos1, pos2) {
         ? x > z ? x : z
         : y > z ? y : z;
 };
-var getYDistanceDiff = function (firstY, secondY) {
+const getYDistanceDiff = (firstY, secondY) => {
     return firstY - secondY <= 0 ? -(firstY - secondY) : firstY - secondY;
 };
 export { progressAndText, addToRaycaster, generateDefaultCalibration, generateLevelCalibration, findGroundLocation, generateZShape, generateCurves, newColor, pluralIt, singularIt, calculateLength, getMaxDistace, getYDistanceDiff };

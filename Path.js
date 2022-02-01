@@ -1,50 +1,29 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 import { SphereBufferGeometry, MeshBasicMaterial, Mesh } from 'three';
 import _ from 'lodash';
 import { newColor, generateZShape, getYDistanceDiff } from './Helper';
-var GadePath = /** @class */ (function () {
-    function GadePath(data, scene, objects, animation) {
-        var _this = this;
-        this.drawingEdgeSpheres = function () {
-            _this.pathEdges = _this.objects.data.pathEdges.map(function (edge) {
-                var from = edge.from
-                    ? _this.objects.data.pathVertices.find(function (vertice) { return vertice._id === edge.from; })
+export default class GadePath {
+    constructor(data, scene, objects, animation) {
+        this.drawingEdgeSpheres = () => {
+            this.pathEdges = this.objects.data.pathEdges.map(edge => {
+                let from = edge.from
+                    ? this.objects.data.pathVertices.find(vertice => vertice._id === edge.from)
                     : {
                         gateway: null,
                         gateway_type: null,
                         place: null,
-                        position: _this.pinPosition,
+                        position: this.pinPosition,
                         shape: null,
                         type: "userpoint",
                         _id: edge._id
                     };
-                var to = _this.objects.data.pathVertices.find(function (vertice) { return vertice._id === edge.to; });
+                let to = this.objects.data.pathVertices.find(vertice => vertice._id === edge.to);
                 if (!from || !to) {
                     return null;
                 }
                 // CALCULATE SPHERES
-                var spheres = [];
-                var affect = null;
-                var isPositive = false;
+                let spheres = [];
+                let affect = null;
+                let isPositive = false;
                 switch (true) {
                     case from && from.position && to && to.position && from.position.x !== to.position.x:
                         affect = "x";
@@ -61,120 +40,116 @@ var GadePath = /** @class */ (function () {
                     default: break;
                 }
                 if (from.position && to.position && affect === "x") {
-                    for (var i = from.position.x; isPositive ? i <= to.position.x : i >= to.position.x; isPositive ? i = i + _this.gap : i = i - _this.gap) {
-                        spheres.push(__assign(__assign({}, from.position), { x: i }));
+                    for (let i = from.position.x; isPositive ? i <= to.position.x : i >= to.position.x; isPositive ? i = i + this.gap : i = i - this.gap) {
+                        spheres.push(Object.assign(Object.assign({}, from.position), { x: i }));
                     }
                 }
                 else if (from.position && to.position && affect === "y") {
-                    for (var i = from.position.y; isPositive ? i <= to.position.y : i >= to.position.y; isPositive ? i = i + _this.gap : i = i - _this.gap) {
-                        spheres.push(__assign(__assign({}, from.position), { y: i }));
+                    for (let i = from.position.y; isPositive ? i <= to.position.y : i >= to.position.y; isPositive ? i = i + this.gap : i = i - this.gap) {
+                        spheres.push(Object.assign(Object.assign({}, from.position), { y: i }));
                     }
                 }
                 else if (from.position && to.position && affect === "z") {
-                    for (var i = from.position.z; isPositive ? i <= to.position.z : i >= to.position.z; isPositive ? i = i + _this.gap : i = i - _this.gap) {
-                        spheres.push(__assign(__assign({}, from.position), { z: i }));
+                    for (let i = from.position.z; isPositive ? i <= to.position.z : i >= to.position.z; isPositive ? i = i + this.gap : i = i - this.gap) {
+                        spheres.push(Object.assign(Object.assign({}, from.position), { z: i }));
                     }
                 }
                 if (!edge.from) {
-                    _this.pinEdge = { _id: edge._id, from: from !== null && from !== void 0 ? from : null, to: to !== null && to !== void 0 ? to : null, length: edge.length, spheres: _this.drawSpheres(spheres) };
-                    _this.pinVertice = { gateway: null, gateway_type: null, place: null, position: _this.pinPosition, shape: null, type: "userpoint", _id: edge._id };
+                    this.pinEdge = { _id: edge._id, from: from !== null && from !== void 0 ? from : null, to: to !== null && to !== void 0 ? to : null, length: edge.length, spheres: this.drawSpheres(spheres) };
+                    this.pinVertice = { gateway: null, gateway_type: null, place: null, position: this.pinPosition, shape: null, type: "userpoint", _id: edge._id };
                 }
-                return !edge.from ? _this.pinEdge : {
+                return !edge.from ? this.pinEdge : {
                     _id: edge._id,
-                    from: from,
-                    to: to,
+                    from,
+                    to,
                     length: edge.length,
-                    spheres: _this.drawSpheres(spheres)
+                    spheres: this.drawSpheres(spheres)
                 };
             });
         };
-        this.drawSpheres = function (spheres) {
-            return spheres.map(function (sphere) {
-                var sphereGeometry = new SphereBufferGeometry(0.25, 32, 32);
-                var sphereMaterial = new MeshBasicMaterial({ color: newColor(_this.pathColor) });
-                var sphereMesh = new Mesh(sphereGeometry, sphereMaterial);
+        this.drawSpheres = (spheres) => {
+            return spheres.map(sphere => {
+                let sphereGeometry = new SphereBufferGeometry(0.25, 32, 32);
+                let sphereMaterial = new MeshBasicMaterial({ color: newColor(this.pathColor) });
+                let sphereMesh = new Mesh(sphereGeometry, sphereMaterial);
                 sphereMesh.position.set(sphere.x, sphere.y, sphere.z);
                 sphereMesh.name = 'drawedPath';
                 sphereMesh.visible = false;
                 sphereMesh.layers.enableAll();
-                _this.scene.add(sphereMesh);
+                this.scene.add(sphereMesh);
                 return sphereMesh;
             });
         };
-        this.findPath = function (to, from) {
+        this.findPath = (to, from) => {
             if (!to)
                 return;
-            var pathFound = [];
+            let pathFound = [];
             // IF CUSTOM DEPARTURE NOT YET
-            var fromVertice = from
-                ? _this.objects.data.pathVertices.find(function (vertice) { return vertice.place === from; })
-                : _this.pinVertice;
-            var destVertice = _this.objects.data.pathVertices.find(function (vertice) { return vertice.place && vertice.place === to; });
-            var destEdge = _this.pathEdges.filter(function (edge) { return destVertice && edge.to._id === destVertice._id; });
+            const fromVertice = from
+                ? this.objects.data.pathVertices.find(vertice => vertice.place === from)
+                : this.pinVertice;
+            const destVertice = this.objects.data.pathVertices.find(vertice => vertice.place && vertice.place === to);
+            const destEdge = this.pathEdges.filter(edge => destVertice && edge.to._id === destVertice._id);
             if (!fromVertice)
                 return;
-            destEdge.forEach(function (de) {
-                var findNextEdge = function (path, edges) {
-                    var unVisitedEdges = edges.filter(function (edge) { return edge._id !== path[path.length - 1]._id; });
-                    var last = path[path.length - 1].from;
+            destEdge.forEach((de) => {
+                const findNextEdge = (path, edges) => {
+                    let unVisitedEdges = edges.filter(edge => edge._id !== path[path.length - 1]._id);
+                    const last = path[path.length - 1].from;
                     if (fromVertice && last !== null && last !== undefined && typeof last !== "string" && last._id === fromVertice._id) {
                         pathFound.push(path);
                         return;
                     }
-                    var nextEdge = unVisitedEdges.filter(function (edge) {
-                        return edge.to === path[path.length - 1].from
-                            || edge.from === path[path.length - 1].from;
-                    });
+                    const nextEdge = unVisitedEdges.filter(edge => edge.to === path[path.length - 1].from
+                        || edge.from === path[path.length - 1].from);
                     if (nextEdge.length > 0) {
-                        nextEdge.forEach(function (edge) {
+                        nextEdge.forEach(edge => {
                             if (path[path.length - 1].from === edge.from || path[path.length - 1].to === edge.to) {
-                                var tempSphere = edge.spheres ? __spreadArray([], edge.spheres, true) : [];
-                                findNextEdge(__spreadArray(__spreadArray([], path, true), [__assign(__assign({}, edge), { to: edge.from, from: edge.to, spheres: _.reverse(tempSphere) })], false), unVisitedEdges);
+                                let tempSphere = edge.spheres ? [...edge.spheres] : [];
+                                findNextEdge([...path, Object.assign(Object.assign({}, edge), { to: edge.from, from: edge.to, spheres: _.reverse(tempSphere) })], unVisitedEdges);
                             }
                             else {
-                                findNextEdge(__spreadArray(__spreadArray([], path, true), [edge], false), unVisitedEdges);
+                                findNextEdge([...path, edge], unVisitedEdges);
                             }
                         });
                     }
                 };
-                findNextEdge([de], _this.pathEdges);
+                findNextEdge([de], this.pathEdges);
             });
             // FIND BEST ROUTE
-            var bestRoute = _.reverse(pathFound.reduce(function (accumulator, current) {
+            const bestRoute = _.reverse(pathFound.reduce((accumulator, current) => {
                 if (!accumulator)
                     return current;
-                var accLength = accumulator.reduce(function (acc, curr) { return curr.length + acc; }, 0);
-                var currLength = current.reduce(function (acc, curr) { return curr.length + acc; }, 0);
+                let accLength = accumulator.reduce((acc, curr) => curr.length + acc, 0);
+                let currLength = current.reduce((acc, curr) => curr.length + acc, 0);
                 return accLength > currLength ? current : accumulator;
             }, null));
             // GENERATE STEPS
-            return _this.generateSteps(bestRoute);
+            return this.generateSteps(bestRoute);
         };
-        this.generateSteps = function (paths) {
-            var calculatedSteps = [];
-            paths.forEach(function (path, index) {
+        this.generateSteps = (paths) => {
+            let calculatedSteps = [];
+            paths.forEach((path, index) => {
                 // STEP EVEN: CHANGE FLOOR DAN DRAW
                 if (index === 0) {
                     if (path.from !== null && path.from !== undefined && typeof path.from !== "string" && path.from.type === "userpoint") {
-                        var calibration = _this.data.calibrations.find(function (clb) { return _this.pinLevel && typeof clb.level !== "string" && clb.level._id === _this.pinLevel.userData._id; });
+                        const calibration = this.data.calibrations.find(clb => this.pinLevel && typeof clb.level !== "string" && clb.level._id === this.pinLevel.userData._id);
                         calculatedSteps.push({
                             type: "single",
-                            levels: _this.pinLevel ? [_this.pinLevel] : [],
-                            calibration: calibration,
+                            levels: this.pinLevel ? [this.pinLevel] : [],
+                            calibration,
                             // position: usercalibration ? usercalibration.position : {...path.from.position, y: path.from.position + 10},
                         });
                     }
                     else {
-                        var shape_1 = _this.data.shapes.find(function (shape) {
-                            return path.from && path.from !== null && path.from !== undefined && typeof path.from !== "string"
-                                && shape._id === path.from.shape;
-                        });
-                        var level_1 = _this.objects.rendered.grounds.find(function (o) { return shape_1 && o.userData._id === shape_1.parent; });
-                        var calibration = _this.data.calibrations.find(function (clb) { return level_1 && clb && typeof clb.level !== "string" && clb.level._id === level_1.userData._id; });
+                        const shape = this.data.shapes.find(shape => path.from && path.from !== null && path.from !== undefined && typeof path.from !== "string"
+                            && shape._id === path.from.shape);
+                        let level = this.objects.rendered.grounds.find(o => shape && o.userData._id === shape.parent);
+                        const calibration = this.data.calibrations.find(clb => level && clb && typeof clb.level !== "string" && clb.level._id === level.userData._id);
                         calculatedSteps.push({
                             type: "single",
-                            levels: [level_1],
-                            calibration: calibration,
+                            levels: [level],
+                            calibration,
                             // position: {...path.from.position, y: path.from.position + 10}
                         });
                     }
@@ -182,9 +157,9 @@ var GadePath = /** @class */ (function () {
                 if (path.from && typeof path.from !== "string" && path.from.type === "gateway") {
                     if (path.to && typeof path.to !== "string" && path.to.type === "gateway") {
                         calculatedSteps[calculatedSteps.length - 1].lookAt = path.from.position;
-                        var fromLevel = _this.objects.rendered.grounds.find(function (lvl) { return path.from && typeof path.from !== "string" && lvl.userData._id === path.from.gateway; });
-                        var toLevel = _this.objects.rendered.grounds.find(function (lvl) { return path.to && typeof path.to !== "string" && lvl.userData._id === path.to.gateway; });
-                        var multiCalibration = {
+                        let fromLevel = this.objects.rendered.grounds.find(lvl => path.from && typeof path.from !== "string" && lvl.userData._id === path.from.gateway);
+                        let toLevel = this.objects.rendered.grounds.find(lvl => path.to && typeof path.to !== "string" && lvl.userData._id === path.to.gateway);
+                        const multiCalibration = {
                             _id: "multi",
                             map: "multi-map",
                             view: "single",
@@ -207,12 +182,12 @@ var GadePath = /** @class */ (function () {
                         });
                     }
                     else {
-                        var level_2 = _this.objects.rendered.grounds.find(function (lvl) { return path.from && typeof path.from !== "string" && lvl.userData._id === path.from.gateway; });
-                        var calibration = _this.data.calibrations.find(function (clb) { return level_2 && typeof clb.level !== "string" && clb.level._id === level_2.userData._id; });
+                        let level = this.objects.rendered.grounds.find(lvl => path.from && typeof path.from !== "string" && lvl.userData._id === path.from.gateway);
+                        const calibration = this.data.calibrations.find(clb => level && typeof clb.level !== "string" && clb.level._id === level.userData._id);
                         calculatedSteps.push({
                             type: "single",
-                            levels: [level_2],
-                            calibration: calibration,
+                            levels: [level],
+                            calibration,
                         });
                     }
                 }
@@ -221,14 +196,15 @@ var GadePath = /** @class */ (function () {
                     calculatedSteps[calculatedSteps.length - 1].lookAt = path.to.position;
                 }
                 // ADD SPHERES
-                var spheres = [];
+                let spheres = [];
                 if (path && path.spheres) {
                     spheres = calculatedSteps[calculatedSteps.length - 1].spheres
-                        ? __spreadArray(__spreadArray([], calculatedSteps[calculatedSteps.length - 1].spheres, true), path.spheres, true) : __spreadArray([], path.spheres, true);
+                        ? [...calculatedSteps[calculatedSteps.length - 1].spheres, ...path.spheres]
+                        : [...path.spheres];
                 }
                 calculatedSteps[calculatedSteps.length - 1].spheres = spheres;
             });
-            var newPaths = __spreadArray([], paths, true);
+            let newPaths = [...paths];
             return {
                 from: newPaths[0].from.type === "userpoint" ? null : newPaths[0].from.place,
                 to: newPaths.length > 0 ? newPaths[newPaths.length - 1].to.place : null,
@@ -251,24 +227,23 @@ var GadePath = /** @class */ (function () {
         this.drawedPath = [];
         this.visiblePath = [];
     }
-    GadePath.prototype.init = function () {
-        var _this = this;
-        return new Promise(function (res) {
+    init() {
+        return new Promise((res) => {
             try {
                 // SET PIN
-                if (_this.data && _this.data.pin && _this.data.pin.level) {
-                    _this.pinLevel = _this.objects.rendered.grounds.find(function (o) { return o.userData._id === _this.data.pin.level; });
+                if (this.data && this.data.pin && this.data.pin.level) {
+                    this.pinLevel = this.objects.rendered.grounds.find(o => o.userData._id === this.data.pin.level);
                 }
-                _this.pinPosition = _this.data.pin
-                    ? __assign(__assign({}, _this.data.pin.position), { y: _this.pinLevel
-                            ? _this.pinLevel.userData.position.y + _this.pinLevel.userData.height
-                            : _this.data.pin.position.y }) : { x: 0, y: 0, z: 0 };
+                this.pinPosition = this.data.pin
+                    ? Object.assign(Object.assign({}, this.data.pin.position), { y: this.pinLevel
+                            ? this.pinLevel.userData.position.y + this.pinLevel.userData.height
+                            : this.data.pin.position.y }) : { x: 0, y: 0, z: 0 };
                 // USER
-                _this.drawingEdgeSpheres();
+                this.drawingEdgeSpheres();
                 // CALCULATE ALL DESTINATION PLACE
-                _this.calculatedPath = _this.objects.data.pathVertices
-                    .filter(function (vertice) { return vertice.type === 'destination'; })
-                    .map(function (vertice) { return vertice.place && _this.findPath(vertice.place); });
+                this.calculatedPath = this.objects.data.pathVertices
+                    .filter(vertice => vertice.type === 'destination')
+                    .map(vertice => vertice.place && this.findPath(vertice.place));
                 res('done');
             }
             catch (err) {
@@ -276,7 +251,5 @@ var GadePath = /** @class */ (function () {
                 console.log(err);
             }
         });
-    };
-    return GadePath;
-}());
-export default GadePath;
+    }
+}
