@@ -79,4 +79,3 @@ var Light = /** @class */ (function () {
     return Light;
 }());
 export default Light;
-//# sourceMappingURL=Light.js.map

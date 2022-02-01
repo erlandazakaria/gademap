@@ -409,4 +409,3 @@ var GadeObject = /** @class */ (function () {
     return GadeObject;
 }());
 export default GadeObject;
-//# sourceMappingURL=Object.js.map

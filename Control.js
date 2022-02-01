@@ -49,4 +49,3 @@ var Control = /** @class */ (function (_super) {
     return Control;
 }(OrbitControls));
 export default Control;
-//# sourceMappingURL=Control.js.map

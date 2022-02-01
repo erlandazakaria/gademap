@@ -402,4 +402,3 @@ var Animation = /** @class */ (function () {
     return Animation;
 }());
 export default Animation;
-//# sourceMappingURL=Animation.js.map

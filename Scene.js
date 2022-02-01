@@ -38,4 +38,3 @@ var GadeScene = /** @class */ (function (_super) {
     return GadeScene;
 }(Scene));
 export default GadeScene;
-//# sourceMappingURL=Scene.js.map

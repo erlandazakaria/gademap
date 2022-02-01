@@ -444,4 +444,3 @@ var Gademap = /** @class */ (function () {
     return Gademap;
 }());
 export default Gademap;
-//# sourceMappingURL=Core.js.map

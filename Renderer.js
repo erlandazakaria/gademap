@@ -96,4 +96,3 @@ var Renderer = /** @class */ (function (_super) {
     return Renderer;
 }(WebGLRenderer));
 export default Renderer;
-//# sourceMappingURL=Renderer.js.map

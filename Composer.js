@@ -40,4 +40,3 @@ var Composer = /** @class */ (function (_super) {
     return Composer;
 }(EffectComposer));
 export default Composer;
-//# sourceMappingURL=Composer.js.map

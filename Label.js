@@ -504,4 +504,3 @@ var Label = /** @class */ (function () {
     return Label;
 }());
 export default Label;
-//# sourceMappingURL=Label.js.map

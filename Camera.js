@@ -26,4 +26,3 @@ var Camera = /** @class */ (function (_super) {
     return Camera;
 }(PerspectiveCamera));
 export default Camera;
-//# sourceMappingURL=Camera.js.map

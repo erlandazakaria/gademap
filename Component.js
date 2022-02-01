@@ -102,4 +102,3 @@ var Gade = function (_a) {
                     } }, { children: [_jsxs("div", __assign({ id: "gade-loading-percent" }, { children: ["Loading ", "".concat(mapLoadProgress, "%"), "..."] }), void 0), _jsx("div", __assign({ id: "gade-loading-text" }, { children: mapLoadText }), void 0)] }), void 0), _jsx("div", __assign({ id: 'gade-map', ref: gadeMapRef, style: { width: '100%', height: '100%' }, tabIndex: 0 }, { children: children }), void 0)] }), void 0));
 };
 export default Gade;
-//# sourceMappingURL=Component.js.map

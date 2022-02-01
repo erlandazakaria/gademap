@@ -197,4 +197,3 @@ var getYDistanceDiff = function (firstY, secondY) {
     return firstY - secondY <= 0 ? -(firstY - secondY) : firstY - secondY;
 };
 export { progressAndText, addToRaycaster, generateDefaultCalibration, generateLevelCalibration, findGroundLocation, generateZShape, generateCurves, newColor, pluralIt, singularIt, calculateLength, getMaxDistace, getYDistanceDiff };
-//# sourceMappingURL=Helper.js.map
