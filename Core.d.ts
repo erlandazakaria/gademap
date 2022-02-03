@@ -48,6 +48,7 @@ export default class Gademap {
         parent: string;
         parent_type: string;
     }[];
+    resetPosition: () => Promise<void>;
     onWindowResize: () => any;
     isAnimating: () => boolean;
     start(): void;

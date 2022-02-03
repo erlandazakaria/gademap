@@ -1,13 +1,13 @@
 {
   "name": "gademap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "3D interactive maps",
   "author": {
     "name": "Erlanda Zakaria",
     "email": "erlandazakaria@gmail.com"
   },
   "license": "SEE LICENSE IN LICENSE.md",
-  "private": "false",
+  "private": false,
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
@@ -15,13 +15,15 @@
     "rebuild": "tsc",
     "build": "run-s cleaning rebuild"
   },
-  "peerDependencies": {
+  "dependencies": {
+    "three": "^0.137.0",
     "axios": "^0.25.0",
     "gsap": "^3.9.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.21"
+  },
+  "peerDependencies": {
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "three": "^0.137.0"
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.178",

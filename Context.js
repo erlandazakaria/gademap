@@ -10,7 +10,8 @@ const initialGadeState = {
     selected: [],
     isLoaded: false,
     hierarchy: [],
-    places: []
+    places: [],
+    screensavers: []
 };
 function gadeReducer(state, action) {
     switch (action.type) {
@@ -24,7 +25,7 @@ function gadeReducer(state, action) {
             return Object.assign({}, state, Object.assign(Object.assign({}, state), { level: action.payload }));
         }
         case "CHANGE_DATA": {
-            return Object.assign({}, state, Object.assign(Object.assign({}, state), { places: action.payload }), { isLoaded: false });
+            return Object.assign({}, state, Object.assign(Object.assign({}, state), { places: action.payload.places, screensavers: action.payload.screensavers }), { isLoaded: false });
         }
         case "LOADED": {
             return Object.assign({}, state, Object.assign(Object.assign({}, state), { isLoaded: true }));
@@ -68,15 +69,28 @@ export function useGade() {
         GadeThree && GadeThree.selectPlace(payload);
         dispatch({ type: "SELECT", payload: [payload] });
     };
+    const unselect = () => {
+        if (GadeThree && GadeThree.isAnimating())
+            return null;
+        GadeThree && GadeThree.unselectAll();
+    };
+    const resetPosition = () => {
+        if (GadeThree && GadeThree.isAnimating())
+            return null;
+        GadeThree && GadeThree.resetPosition();
+    };
     return {
         isLoaded: state.isLoaded,
         selected: state.selected,
         level: state.level,
         hierarchy: state.hierarchy,
         places: state.places,
+        screensavers: state.screensavers,
         select,
+        unselect,
         changeLevel,
         findAway,
+        resetPosition
     };
 }
 export function useGadeInternal() {

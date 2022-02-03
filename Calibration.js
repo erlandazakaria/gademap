@@ -6,6 +6,19 @@ export default class GadeCalibration {
         this.animation = animation;
         this.objects = objects;
     }
+    async goDefault() {
+        return new Promise(async (res) => {
+            // show hide level
+            if (this.default.view === 'multi') {
+                // show all grounds and buildings
+                await Promise.all([this.animation.calibrateCamera(this.default), this.animation.showAllLevels()]);
+            }
+            else {
+                await Promise.all([this.animation.calibrateCamera(this.default), this.objects.hideLevels(this.default.level)]);
+            }
+            res("");
+        });
+    }
     async calibrate(level) {
         return new Promise(async (res) => {
             let calibration = Object.assign({}, this.default);

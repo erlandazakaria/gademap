@@ -1,4 +1,4 @@
-import { TextureLoader, RepeatWrapping, Vector2, Shape, ExtrudeBufferGeometry, MeshStandardMaterial, Mesh, Group, sRGBEncoding, Box3, Vector3 } from 'three';
+import { TextureLoader, RepeatWrapping, Vector2, Shape, ExtrudeBufferGeometry, MeshStandardMaterial, Mesh, Group, sRGBEncoding, Box3, Vector3, } from 'three';
 import _ from 'lodash';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { generateCurves, newColor } from "./Helper";

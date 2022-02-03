@@ -7,5 +7,6 @@ export default class GadeCalibration {
     private animation;
     private objects;
     constructor(defaultCalibration: CalibrationType, calibrations: Array<CalibrationType>, animation: AnimationType, objects: GadeObject);
+    goDefault(): Promise<unknown>;
     calibrate(level: LevelType): Promise<unknown>;
 }

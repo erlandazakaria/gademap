@@ -20,7 +20,10 @@ const Gade = ({ map, loadingText, children }) => {
                     dispatch: gadeDispatch
                 });
                 threeGM.init(setMapLoadProgress, setMapLoadText);
-                changeData(res.data.data.places);
+                changeData({
+                    places: res.data.data.places,
+                    screensavers: res.data.data.screensavers
+                });
             }
             else {
                 console.warn(res.data.message);

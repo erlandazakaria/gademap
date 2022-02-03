@@ -154,6 +154,7 @@ export default class Gademap {
                 this.animation.changeColor(placeShape, 1, this.data.highlight_color || '#2AA5A5');
                 // SAVE SELECTED
                 this.selected = [placeShape];
+                this.dispatch ? this.dispatch('select', [place]) : console.error('Error on Dispatching');
             }
         };
         this.unselectAll = (deletePath = true) => {
@@ -220,6 +221,10 @@ export default class Gademap {
         this.getHierarchy = () => {
             return this.objects.hierarchy.map(lvl => ({ _id: lvl._id, type: lvl.type, name: lvl.name, parent: lvl.parent, parent_type: lvl.parent_type }));
         };
+        this.resetPosition = async () => {
+            await this.calibration.goDefault();
+            this.unselectAll();
+        };
         this.onWindowResize = () => {
             if (!this.ref)
                 return null;
@@ -275,7 +280,6 @@ export default class Gademap {
         this.level = null;
         this.scene = new Scene();
         this.defaultLevel = this.data.grounds.find(ground => ground._id === this.data.default_calibration.level._id);
-        // ? this.data.grounds.find(ground => ground._id === this.data.default_calibration.level)
         this.camera = new Camera(this.ref);
         this.renderer = new Renderer(this.ref);
         this.composer = new Composer(this.renderer, this.scene, this.camera);

@@ -8,9 +8,12 @@ interface useGadeInterface {
     level: LevelType;
     hierarchy: Array<GroundType | BuildingType>;
     places: Array<PlaceType>;
+    screensavers: Array<any>;
+    unselect: () => void;
     select: (place: PlaceType) => void;
     changeLevel: (level: LevelType) => void;
     findAway: (to: PlaceType, from?: PlaceType) => void;
+    resetPosition: () => void;
 }
 export declare const setGadeThree: (three: gadecoreType) => void;
 export declare function GadeProvider({ children }: {
@@ -25,6 +28,9 @@ export declare function useGadeInternal(): {
     places: PlaceType[];
     gadeDispatch: (func: string, payload?: any) => void;
     reset: () => void;
-    changeData: (payload: Array<PlaceType>) => void;
+    changeData: (payload: {
+        places: Array<PlaceType>;
+        screensavers: Array<any>;
+    }) => void;
 };
 export {};
