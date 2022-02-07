@@ -1,4 +1,4 @@
-import { TextureLoader, RepeatWrapping, Vector2, Shape, ExtrudeBufferGeometry, MeshStandardMaterial, Mesh, Group, sRGBEncoding, Box3, Vector3, } from 'three';
+import { TextureLoader, RepeatWrapping, Vector2, Shape, ExtrudeBufferGeometry, MeshStandardMaterial, Mesh, Group, sRGBEncoding, Box3, Vector3, MathUtils } from 'three';
 import _ from 'lodash';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { generateCurves, newColor } from "./Helper";
@@ -351,7 +351,7 @@ export default class GadeObject {
         group.userData = model;
         group.castShadow = true;
         group.receiveShadow = true;
-        group.rotateY(model.rotation);
+        group.rotateY(MathUtils.degToRad(model.rotation));
         group.position.set(model.position.x, model.position.y + 0.1, model.position.z);
         group.scale.set(model.scale.x, model.scale.y, model.scale.z);
         this.scene.add(group);

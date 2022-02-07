@@ -129,6 +129,8 @@ export default class GadePath {
         };
         this.generateSteps = (paths) => {
             let calculatedSteps = [];
+            if (!paths)
+                return null;
             paths.forEach((path, index) => {
                 // STEP EVEN: CHANGE FLOOR DAN DRAW
                 if (index === 0) {
@@ -243,7 +245,8 @@ export default class GadePath {
                 // CALCULATE ALL DESTINATION PLACE
                 this.calculatedPath = this.objects.data.pathVertices
                     .filter(vertice => vertice.type === 'destination')
-                    .map(vertice => vertice.place && this.findPath(vertice.place));
+                    .map(vertice => vertice.place && this.findPath(vertice.place))
+                    .filter(path => path);
                 res('done');
             }
             catch (err) {
